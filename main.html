@@ -9,7 +9,6 @@
         textarea
         {
           width:100%;
-          height: 100%;
         }
 
 </style>
@@ -29,18 +28,25 @@
                                     <h4>Please provice a csv file with the headers: label and value. otherwise it would not work!</h4>
                                     <input type="file" id="dealCsv"/>
                             </div>
+
+                            <div class="row">
+                                    <div class="col-sm-2">
+                                            Preview CSV:
+                                    </div>
+                                    <div class="col-sm-12">
+                                        <div id="preview"></div>
+                                    </div>
+                            </div>
+
             
                             <div class="row">
                                     <div class="col-sm-2 col-sm-offset-3">
                                             Output:
                                     </div>
-                                    <div class="col-sm-8">
-                                            <textarea name="text" id="res" oninput='this.style.height = "";this.style.height = this.scrollHeight + "px"'></textarea>
+                                    <div class="col-sm-12">
+                                            <textarea name="text" id="res"  oninput='this.style.height = "";this.style.height = this.scrollHeight + "px"'></textarea>
                                     </div>
-                                    
-            
                             </div>
-            
                             <div class="row">
                                     <button onclick="copyText()">Copy text</button>
                             </div>
@@ -90,7 +96,13 @@
                   
                   let csvdata = e.target.result; 
                   
-                  document.getElementById("res").value = parseCsv.getParsecsvdata(csvdata); // calling function for parse csv data 
+                  let jsonData = parseCsv.getParsecsvdata(csvdata); // calling function for parse csv data
+                  let xmlData  = parseCsv.getPickListXML(jsonData);
+                  let tableCSVPreviewHTML = parseCsv.getTableCSVPreview(jsonData);
+
+                  
+                  document.getElementById("res").value = xmlData 
+                  document.getElementById("preview").innerHTML = tableCSVPreviewHTML
                   setHeight('res');
               });
               
@@ -104,9 +116,43 @@
   
         let [ headers, ...rows ] = data.split('\n').map(row => row.trim().split(','));
 
-        let jsonData = rows.map(row => headers.reduce((data,header , i) => ({ [header]: row[i], ...data}), {__proto__:null}));
+        return jsonData = rows.map(row => headers.reduce((data,header , i) => ({ [header]: row[i], ...data}), {__proto__:null}));
 
-            var xmlData = '';
+
+      }
+
+      uploadDealcsv.prototype.getTableCSVPreview = function(data) {
+
+        let resTable ='';
+        if(data.length>1)
+        {
+            resTable += '<table class="table">';
+                    resTable +='<tr>';
+                            for (var key in data[0])
+                            {
+                                resTable +='<th>' + key + '</th>';
+                            }
+                    
+                    resTable +='<tr>';
+                        for(var i=0;i<data.length;i++)
+                        {
+                            resTable +='</tr>';
+                            for (var key in data[i])
+                            {
+                                resTable +='<td>' + data[i][key] + '</td>';
+                            }
+                            resTable +='</tr>';
+                        }
+                    
+
+            resTable += '</table>';
+        }
+        return resTable;
+    }   
+  
+      uploadDealcsv.prototype.getPickListXML = function(data) {
+
+        var xmlData = '';
             for(let i=0;i<jsonData.length; i++)
             {
                 xmlData += '<value>\n';
@@ -115,12 +161,9 @@
                     xmlData +='\t<label>' + jsonData[i].label + '</label>\n';
                 xmlData += '</value>\n';
             }
-    
-        console.log(xmlData);
-        return xmlData;
-      }
-  
-  
+            console.log(xmlData);
+            return xmlData;
+    }
     
     var parseCsv = new uploadDealcsv();
     parseCsv.getCsv();
