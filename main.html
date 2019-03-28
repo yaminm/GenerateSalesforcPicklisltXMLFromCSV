@@ -5,13 +5,73 @@
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" />
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  <style>
+        textarea
+        {
+          width:100%;
+          height: 100%;
+        }
+
+</style>
  </head>
  <body>
-    <input type="file" id="dealCsv"/>
-    <textarea id="res" ></textarea>
+
+        <div class="container-fluid">
+            <div class="row">
+                    <div class="row">
+                            <div class="jumbotron pageHeader">
+                                    <h1 class="text-center">Convert CSV to picklist options XML Salesforce format</h1>
+                            </div>
+                    </div>
+                    <div class="col-sm-6 col-sm-offset-3">
+
+                            <div class="row">
+                                    <h4>Please provice a csv file with the headers: label and value. otherwise it would not work!</h4>
+                                    <input type="file" id="dealCsv"/>
+                            </div>
+            
+                            <div class="row">
+                                    <div class="col-sm-2 col-sm-offset-3">
+                                            Output:
+                                    </div>
+                                    <div class="col-sm-8">
+                                            <textarea name="text" id="res" oninput='this.style.height = "";this.style.height = this.scrollHeight + "px"'></textarea>
+                                    </div>
+                                    
+            
+                            </div>
+            
+                            <div class="row">
+                                    <button onclick="copyText()">Copy text</button>
+                            </div>
+                    </div>
+            </div>
+        </div>
  </body>
  <script>
 
+
+
+        function setHeight(fieldId){
+            document.getElementById(fieldId).style.height = document.getElementById(fieldId).scrollHeight+'px';
+        }
+
+ /*****************Copy Text***************************/
+        function copyText() {
+            /* Get the text field */
+            var copyText = document.getElementById("res");
+          
+            /* Select the text field */
+            copyText.select();
+          
+            /* Copy the text inside the text field */
+            document.execCommand("copy");
+          
+            /* Alert the copied text */
+            alert("Text been copy!");
+          }
+
+/*****************Copy Text***************************/
 
     function uploadDealcsv () {}; 
 
@@ -31,6 +91,7 @@
                   let csvdata = e.target.result; 
                   
                   document.getElementById("res").value = parseCsv.getParsecsvdata(csvdata); // calling function for parse csv data 
+                  setHeight('res');
               });
               
               reader.readAsBinaryString(myFile);
@@ -45,8 +106,6 @@
 
         let jsonData = rows.map(row => headers.reduce((data,header , i) => ({ [header]: row[i], ...data}), {__proto__:null}));
 
-
-debugger;
             var xmlData = '';
             for(let i=0;i<jsonData.length; i++)
             {
