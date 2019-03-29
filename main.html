@@ -22,33 +22,27 @@
                                     <h1 class="text-center">CSV to Picklist options XML Salesforce format</h1>
                             </div>
                     </div>
-                    <div class="col-sm-6 col-sm-offset-3">
+                    <div class="col-sm-7 col-sm-offset-3">
 
                             <div class="row">
                                     <h4>Please provide a csv file with the headers: label and value. otherwise it would not work!</h4>
                                     <input type="file" id="dealCsv"/>
                             </div>
-
-                            <div class="row">
-                                    <div class="col-sm-12">
-                                        <div id="preview"></div>
-                                    </div>
-                            </div>
-
-            
-                            <div class="row">
-                                    <div class="col-sm-2 col-sm-offset-3">
-                                            Output:
-                                    </div>
-                                    <div class="col-sm-12">
-                                            <textarea name="text" id="res"  oninput='this.style.height = "";this.style.height = this.scrollHeight + "px"'></textarea>
-                                    </div>
-                            </div>
-                            <div class="row">
-                                    <button onclick="copyText()">Copy text</button>
-                            </div>
                     </div>
             </div>
+            <div>
+            <div class="row ">
+                    <div class="col-sm-4 col-sm-offset-1">
+                            <div id="preview"></div>
+                    </div>
+                    <div class="col-sm-5">
+                                    Output:
+                                <textarea name="text" id="res"  oninput='this.style.height = "";this.style.height = this.scrollHeight + "px"'></textarea>
+                    </div>
+                    <div class="col-sm-2">
+                            <button onclick="copyText()">Copy Output</button>
+
+                    </div>
         </div>
  </body>
  <script>
